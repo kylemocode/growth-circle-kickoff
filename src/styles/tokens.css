@@ -1,0 +1,81 @@
+:root {
+  /* Brand — Orange (KV primary, energy) */
+  --orange-50:  #FFF4EA;
+  --orange-100: #FFE0C2;
+  --orange-200: #FFC68A;
+  --orange-300: #FFA858;
+  --orange-400: #FF8E3C;
+  --orange-500: #F57825;
+  --orange-600: #D85F12;
+  --orange-700: #A8470B;
+
+  /* Brand — Blue (secondary) */
+  --blue-50:   #EAF3FB;
+  --blue-100:  #C8DEF3;
+  --blue-300:  #6DA3DD;
+  --blue-500:  #2A6EB5;
+  --blue-700:  #163E68;
+
+  /* Neutrals — flat tone */
+  --ink-900: #111418;
+  --ink-800: #1F2329;
+  --ink-700: #3A4049;
+  --ink-500: #6B7280;
+  --ink-400: #9AA1AB;
+  --ink-300: #C9CFD6;
+  --ink-200: #E5E7EB;
+  --ink-100: #F1F3F5;
+  --ink-50:  #F8FAFB;
+  --paper:   #FFFFFF;
+  --paper-2: #FAFBFC;
+
+  /* Accents */
+  --yellow:  #FFD23F;
+  --red:     #E84A3D;
+  --green:   #2EAA6B;
+
+  /* Semantic */
+  --bg:           var(--paper);
+  --fg:           var(--ink-900);
+  --muted:        var(--ink-500);
+  --border:       var(--ink-200);
+  --primary:      var(--orange-500);
+  --secondary:    var(--blue-500);
+
+  /* Typography */
+  --font-tc: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Radii */
+  --r-xs: 4px;
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-2xl: 36px;
+
+  /* Spacing */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(17, 20, 24, 0.05);
+  --shadow-md: 0 4px 16px rgba(17, 20, 24, 0.08);
+  --shadow-lg: 0 16px 40px rgba(17, 20, 24, 0.14);
+  --shadow-pop: 0 12px 32px rgba(245, 120, 37, 0.35);
+  --shadow-flat: 4px 4px 0 0 var(--ink-900);
+
+  /* Container */
+  --container: 720px;
+
+  /* Safe area (iPhone notch / home bar) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
