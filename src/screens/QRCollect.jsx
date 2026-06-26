@@ -49,7 +49,10 @@ export default function QRCollect({ me, back }) {
 
       <div className="fade-in-up-1">
         <div className="h-eyebrow">EXCHANGE & COLLECT</div>
-        <h1 className="h-title">📸 QR 互掃收集</h1>
+        <h1 className="h-title screen-title-row">
+          <img src="/icon-qr.svg" alt="" className="screen-title-icon" />
+          QR 互掃收集
+        </h1>
         <p className="h-sub">給對方掃你的 QR，或掃對方的 QR · 收集今晚遇到的夥伴</p>
       </div>
 
@@ -92,12 +95,17 @@ export default function QRCollect({ me, back }) {
                 <span style={{ fontSize: 16, opacity: 0.6 }}> / {MEMBERS.length - 1}</span>
               </div>
             </div>
-            {collected.length >= 10 && <div className="badge-collect">🏆 社交達人</div>}
+            {collected.length >= 10 && (
+              <div className="badge-collect">
+                <img src="/icon-founding.svg" alt="" className="badge-icon" />
+                <span>社交達人</span>
+              </div>
+            )}
           </div>
 
           {collected.length === 0 ? (
             <div className="empty-state">
-              <div className="empty-emoji">🌱</div>
+              <img src="/icon-self.svg" alt="" className="empty-icon" />
               <div className="empty-title">還沒收集到夥伴</div>
               <div className="empty-desc">切到「掃別人」開始收集吧</div>
             </div>
@@ -108,9 +116,8 @@ export default function QRCollect({ me, back }) {
                 if (!m) return null
                 return (
                   <div key={id} className="collection-card" style={{ animationDelay: `${i * 0.04}s` }}>
-                    <div className="collection-emoji">👤</div>
+                    <div className="collection-avatar">{String(m.cardNum).padStart(2, '0')}</div>
                     <div className="collection-name">{m.name}</div>
-                    <div className="collection-card-num">#{String(m.cardNum).padStart(2, '0')}</div>
                   </div>
                 )
               })}
@@ -123,6 +130,16 @@ export default function QRCollect({ me, back }) {
 
       <style>{`
         .back-btn { font-size: 14px; font-weight: 700; color: var(--ink-700); }
+        .screen-title-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .screen-title-icon {
+          width: 32px;
+          height: 32px;
+          flex-shrink: 0;
+        }
 
         .qr-tabs {
           display: flex;
@@ -218,13 +235,20 @@ export default function QRCollect({ me, back }) {
           justify-content: space-between;
         }
         .badge-collect {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
           background: var(--yellow);
           color: var(--ink-900);
-          padding: 6px 12px;
+          padding: 6px 12px 6px 8px;
           border-radius: 999px;
           font-size: 12px;
           font-weight: 800;
           border: 2px solid var(--ink-900);
+        }
+        .badge-icon {
+          width: 18px;
+          height: 18px;
         }
         .collection-grid {
           display: grid;
@@ -243,14 +267,22 @@ export default function QRCollect({ me, back }) {
           box-shadow: 2px 2px 0 0 var(--ink-900);
           animation: fadeInUp 0.4s ease-out both;
         }
-        .collection-emoji { font-size: 28px; }
-        .collection-name { font-size: 12px; font-weight: 800; margin-top: 4px; }
-        .collection-card-num {
+        .collection-avatar {
           font-family: var(--font-mono);
-          font-size: 10px;
-          color: var(--muted);
-          font-weight: 700;
+          font-size: 18px;
+          font-weight: 900;
+          width: 40px;
+          height: 40px;
+          margin: 0 auto 4px;
+          background: var(--orange-100);
+          border: 2px solid var(--ink-900);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: var(--orange-700);
         }
+        .collection-name { font-size: 12px; font-weight: 800; }
         .empty-state {
           text-align: center;
           padding: 60px 20px;
@@ -258,7 +290,13 @@ export default function QRCollect({ me, back }) {
           border: 2px dashed var(--ink-200);
           border-radius: var(--r-md);
         }
-        .empty-emoji { font-size: 56px; margin-bottom: 12px; }
+        .empty-icon {
+          width: 64px;
+          height: 64px;
+          margin: 0 auto 12px;
+          display: block;
+          opacity: 0.5;
+        }
         .empty-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
         .empty-desc { font-size: 13px; color: var(--muted); }
       `}</style>

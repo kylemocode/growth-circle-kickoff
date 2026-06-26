@@ -19,7 +19,10 @@ export default function Cafe({ me, back }) {
 
       <div className="fade-in-up-1">
         <div className="h-eyebrow">WORLD CAFÉ</div>
-        <h1 className="h-title">☕ 世界咖啡館</h1>
+        <h1 className="h-title screen-title-row">
+          <img src="/icon-cafe.svg" alt="" className="screen-title-icon" />
+          世界咖啡館
+        </h1>
         <p className="h-sub">3 輪換桌討論 · 桌長留下 · 海報共創</p>
       </div>
 
@@ -58,7 +61,7 @@ export default function Cafe({ me, back }) {
       </div>
 
       <div className="rules fade-in-up-5">
-        <div className="rules-head">📌 三條規則</div>
+        <div className="rules-head">三條規則</div>
         <ul className="rules-list">
           <li><b>邊講邊寫</b>　海報是大家的筆記，不是桌長的</li>
           <li><b>換題換桌</b>　每 15 分鐘換一輪、會員換桌、桌長留下</li>
@@ -244,6 +247,16 @@ export default function Cafe({ me, back }) {
           font-size: 14px;
           font-weight: 700;
           color: var(--ink-700);
+        }
+        .screen-title-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .screen-title-icon {
+          width: 32px;
+          height: 32px;
+          flex-shrink: 0;
         }
       `}</style>
     </div>

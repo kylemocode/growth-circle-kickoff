@@ -77,7 +77,10 @@ export default function Bingo({ me, back }) {
 
       <div className="fade-in-up-1">
         <div className="h-eyebrow">CONNECT THE DOTS</div>
-        <h1 className="h-title">🎴 連連看 BINGO</h1>
+        <h1 className="h-title screen-title-row">
+          <img src="/icon-bingo.svg" alt="" className="screen-title-icon" />
+          連連看 BINGO
+        </h1>
         <p className="h-sub">
           找一個還沒聊過的 Builder，挑一格交換答案。<br />
           連 <b style={{ color: 'var(--orange-600)' }}>3 條線</b> 就 BINGO，全填滿可換 AAPD 周邊。
@@ -94,7 +97,7 @@ export default function Bingo({ me, back }) {
           <div className="status-num">{lines.length}</div>
           <div className="status-label">/3 條線</div>
         </div>
-        {bingo && <div className="status-bingo">🔥 BINGO!</div>}
+        {bingo && <div className="status-bingo">BINGO!</div>}
       </div>
 
       <div className="bingo-grid fade-in-up-3">
@@ -153,7 +156,7 @@ export default function Bingo({ me, back }) {
       {celebrate && (
         <div className="modal-overlay" onClick={() => setCelebrate(false)}>
           <div className="modal pop" onClick={(e) => e.stopPropagation()} style={{ textAlign: 'center' }}>
-            <div className="celebrate-emoji">🎉</div>
+            <img src="/icon-founding.svg" alt="" className="celebrate-icon" />
             <h2 className="h-title" style={{ color: 'var(--orange-500)', textAlign: 'center', fontSize: 36 }}>
               BINGO!
             </h2>
@@ -162,7 +165,7 @@ export default function Bingo({ me, back }) {
               繼續完成更多格，可以兌換 AAPD 周邊
             </p>
             <button onClick={() => setCelebrate(false)} className="btn btn-primary btn-block">
-              繼續訓練 💪
+              繼續訓練
             </button>
           </div>
         </div>
@@ -318,10 +321,22 @@ export default function Bingo({ me, back }) {
           gap: 10px;
           margin-top: 14px;
         }
-        .celebrate-emoji {
-          font-size: 72px;
-          margin-bottom: 8px;
+        .celebrate-icon {
+          width: 96px;
+          height: 96px;
+          margin: 0 auto 12px;
+          display: block;
           animation: pulse 1.5s infinite;
+        }
+        .screen-title-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .screen-title-icon {
+          width: 32px;
+          height: 32px;
+          flex-shrink: 0;
         }
       `}</style>
     </div>
