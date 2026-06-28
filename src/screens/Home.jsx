@@ -82,13 +82,13 @@ export default function Home({ me, go, onLogout }) {
           <div className="module-arrow">→</div>
         </button>
 
-        <button className="module-card" onClick={() => go('qr')}>
+        <button className="module-card" onClick={() => go('admin')}>
           <div className="module-icon module-icon-yellow">
             <img src="/icon-qr.svg" alt="" />
           </div>
           <div className="module-body">
-            <div className="module-title">QR 互掃收集</div>
-            <div className="module-desc">收集今晚遇到的夥伴</div>
+            <div className="module-title">📸 合照牆（Admin）</div>
+            <div className="module-desc">當天所有 Builder 的合照</div>
           </div>
           <div className="module-arrow">→</div>
         </button>
@@ -104,9 +104,6 @@ export default function Home({ me, go, onLogout }) {
         .home-screen { gap: 0; }
 
         /* Hero card */
-        .hero-card-enter {
-          animation: heroEnter 0.7s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
-        }
         @keyframes heroEnter {
           0% { opacity: 0; transform: translateY(40px) scale(0.95); }
           100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -154,6 +151,15 @@ export default function Home({ me, go, onLogout }) {
         .hero-meta-pill.mono { font-family: var(--font-mono); }
 
         .hero-card { display: flex; align-items: flex-end; gap: 16px; }
+        .hero-card-enter {
+          animation:
+            heroEnter 0.7s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) backwards,
+            cardBreath 5s 1.5s ease-in-out infinite;
+        }
+        @keyframes cardBreath {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-3px) scale(1.005); }
+        }
         .hero-card-content { flex: 1; min-width: 0; }
         .hero-card-ip {
           flex-shrink: 0;
@@ -162,17 +168,12 @@ export default function Home({ me, go, onLogout }) {
           margin-right: -8px;
           margin-bottom: -28px;
           position: relative;
-          animation: ipFloat 4s ease-in-out infinite;
         }
         .hero-card-ip img {
           width: 100%;
           height: 100%;
           object-fit: contain;
           filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.3));
-        }
-        @keyframes ipFloat {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-6px); }
         }
         @media (max-width: 380px) {
           .hero-card-ip { width: 110px; height: 110px; }

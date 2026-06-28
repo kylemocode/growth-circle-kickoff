@@ -3,7 +3,7 @@ import PinGate from './screens/PinGate'
 import Home from './screens/Home'
 import Bingo from './screens/Bingo'
 import Cafe from './screens/Cafe'
-import QRCollect from './screens/QRCollect'
+import Admin from './screens/Admin'
 
 const ME_KEY = 'gck_me_v1'
 
@@ -44,7 +44,7 @@ export default function App() {
       {me && screen === 'home' && <Home me={me} go={setScreen} onLogout={logout} />}
       {me && screen === 'bingo' && <Bingo me={me} back={() => setScreen('home')} />}
       {me && screen === 'cafe' && <Cafe me={me} back={() => setScreen('home')} />}
-      {me && screen === 'qr' && <QRCollect me={me} back={() => setScreen('home')} />}
+      {me && screen === 'admin' && <Admin me={me} back={() => setScreen('home')} />}
 
       {transition && <GateTransition phase={transition} />}
     </>
