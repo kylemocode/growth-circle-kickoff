@@ -38,10 +38,9 @@ export default function PinGate({ onLogin }) {
   function tryLogin(pin) {
     const member = findMemberByPin(pin)
     if (member) {
-      // 啟動轉場：PinGate 自己負責「閘門關上 + 顯示內容」
-      // 1.3 秒後通知 App，App 把 PinGate 卸載 + 顯示自己的「閘門拉開」動畫
+      // 標記成功 → 4 格變橘色 pop，並立刻通知 App 接手轉場
       setUnlocking(member)
-      setTimeout(() => onLogin(member), 700)
+      onLogin(member)
     } else {
       setError(true)
       setTimeout(() => setError(false), 600)
@@ -54,8 +53,6 @@ export default function PinGate({ onLogin }) {
     <div className="pin-screen">
       <div className="pin-bg-grid" />
 
-      {unlocking && <UnlockTransition member={unlocking} />}
-
       <div className="pin-content fade-in-up">
         <div className="pin-logo-wrap fade-in-up-1">
           <img src="/kettlebell.png" alt="" className="pin-kettlebell" />
@@ -67,8 +64,11 @@ export default function PinGate({ onLogin }) {
           <span className="pin-event-tag">KICKOFF EVENT</span>
         </div>
 
+        <div className="pin-aapd-logo fade-in-up-3">
+          <img src="/aapd-logo-full.svg" alt="AAPD" />
+        </div>
+
         <h1 className="pin-title fade-in-up-3">
-          AAPD<br/>
           <span className="pin-title-en">GROWTH CIRCLE</span><br/>
           <span className="pin-title-sm">創始會員實體迎新</span>
         </h1>
@@ -100,9 +100,6 @@ export default function PinGate({ onLogin }) {
           {error && <div className="pin-error">PIN 不正確，再試一次 🤔</div>}
         </div>
 
-        <div className="pin-hint fade-in-up-5">
-          PIN 在你的名牌上 · 提示：<b>第一碼 = R1 桌號</b>
-        </div>
       </div>
 
       <style>{`
@@ -181,6 +178,15 @@ export default function PinGate({ onLogin }) {
           margin-bottom: var(--s-5);
           flex-wrap: wrap;
         }
+        .pin-aapd-logo {
+          margin-bottom: var(--s-4);
+          display: flex;
+          justify-content: center;
+        }
+        .pin-aapd-logo img {
+          height: clamp(40px, 7vw, 52px);
+          width: auto;
+        }
         .pin-title {
           font-size: clamp(32px, 10vw, 48px);
           font-weight: 900;
@@ -257,13 +263,6 @@ export default function PinGate({ onLogin }) {
           font-weight: 700;
           animation: fadeIn 0.2s;
         }
-        .pin-hint {
-          margin-top: var(--s-7);
-          font-size: 13px;
-          color: var(--muted);
-          line-height: 1.6;
-        }
-        .pin-hint b { color: var(--ink-900); font-weight: 800; }
 
         /* PIN success state */
         .pin-box.success {
@@ -275,84 +274,6 @@ export default function PinGate({ onLogin }) {
           0% { transform: scale(1); }
           50% { transform: scale(1.15); }
           100% { transform: scale(1); }
-        }
-      `}</style>
-    </div>
-  )
-}
-
-function UnlockTransition({ member }) {
-  return (
-    <div className="unlock-overlay">
-      {/* 黑色閘門：純黑切換、無文字 */}
-      <div className="gate gate-top" />
-      <div className="gate gate-bottom" />
-      {/* 中間小點 loading */}
-      <div className="unlock-loader" aria-hidden="true">
-        <span /><span /><span />
-      </div>
-
-      <style>{`
-        .unlock-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 1000;
-          pointer-events: none;
-          overflow: hidden;
-        }
-        .gate {
-          position: absolute;
-          left: 0;
-          right: 0;
-          height: 50vh;
-          background: var(--ink-900);
-          z-index: 2;
-          will-change: transform;
-        }
-        .gate-top {
-          top: 0;
-          border-bottom: 4px solid var(--orange-500);
-          transform: translateY(-100%);
-          animation: gateCloseTop 0.3s cubic-bezier(0.76, 0, 0.24, 1) forwards;
-        }
-        .gate-bottom {
-          bottom: 0;
-          border-top: 4px solid var(--orange-500);
-          transform: translateY(100%);
-          animation: gateCloseBottom 0.3s cubic-bezier(0.76, 0, 0.24, 1) forwards;
-        }
-        @keyframes gateCloseTop {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(0); }
-        }
-        @keyframes gateCloseBottom {
-          0% { transform: translateY(100%); }
-          100% { transform: translateY(0); }
-        }
-
-        .unlock-loader {
-          position: absolute;
-          inset: 0;
-          z-index: 3;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 10px;
-          opacity: 0;
-          animation: fadeIn 0.2s 0.3s forwards;
-        }
-        .unlock-loader span {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          background: var(--orange-500);
-          animation: loaderDot 1s infinite ease-in-out;
-        }
-        .unlock-loader span:nth-child(2) { animation-delay: 0.15s; }
-        .unlock-loader span:nth-child(3) { animation-delay: 0.3s; }
-        @keyframes loaderDot {
-          0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-          40% { transform: scale(1.1); opacity: 1; }
         }
       `}</style>
     </div>

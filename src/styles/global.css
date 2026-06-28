@@ -200,12 +200,18 @@ a { color: inherit; text-decoration: none; }
 .topbar-logo {
   display: flex;
   align-items: center;
-  gap: var(--s-2);
+  gap: 10px;
   font-weight: 900;
   letter-spacing: -0.01em;
   font-size: 15px;
 }
 .topbar-logo img { width: 28px; height: 28px; }
+.topbar-bell { flex-shrink: 0; }
+.topbar-aapd {
+  width: auto !important;
+  height: 22px !important;
+  display: block;
+}
 
 /* Animations */
 @keyframes fadeIn {

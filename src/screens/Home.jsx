@@ -3,22 +3,24 @@ export default function Home({ me, go, onLogout }) {
     <div className="screen home-screen">
       <header className="topbar fade-in-up">
         <div className="topbar-logo">
-          <img src="/kettlebell.svg" alt="" />
-          <span>GROWTH CIRCLE</span>
+          <img src="/kettlebell.svg" alt="" className="topbar-bell" />
+          <img src="/aapd-logo-full.svg" alt="AAPD" className="topbar-aapd" />
         </div>
         <button onClick={onLogout} className="btn-ghost" style={{ fontSize: 13, fontWeight: 700 }}>登出</button>
       </header>
 
       {/* Hero card */}
       <div className="hero-card hero-card-enter">
-        <div className="hero-card-eyebrow">HELLO, BUILDER</div>
-        <div className="hero-card-name">{me.name}</div>
-        <div className="hero-card-meta">
-          <span className="hero-meta-pill">卡 #{String(me.cardNum).padStart(2, '0')}</span>
-          <span className="hero-meta-pill mono">PIN {me.pin}</span>
+        <div className="hero-card-content">
+          <div className="hero-card-eyebrow">HELLO, BUILDER</div>
+          <div className="hero-card-name">{me.name}</div>
+          <div className="hero-card-meta">
+            <span className="hero-meta-pill">卡 #{String(me.cardNum).padStart(2, '0')}</span>
+            <span className="hero-meta-pill mono">PIN {me.pin}</span>
+          </div>
         </div>
-        <div className="hero-card-deco" aria-hidden="true">
-          <img src="/kettlebell.png" alt="" />
+        <div className="hero-card-ip" aria-hidden="true">
+          <img src="/ip-boy.png" alt="" />
         </div>
       </div>
 
@@ -150,18 +152,30 @@ export default function Home({ me, go, onLogout }) {
           border: 1.5px solid rgba(255, 255, 255, 0.3);
         }
         .hero-meta-pill.mono { font-family: var(--font-mono); }
-        .hero-card-deco {
-          position: absolute;
-          top: -20px;
-          right: -30px;
-          opacity: 0.18;
-          pointer-events: none;
-          transform: rotate(-12deg);
+
+        .hero-card { display: flex; align-items: flex-end; gap: 16px; }
+        .hero-card-content { flex: 1; min-width: 0; }
+        .hero-card-ip {
+          flex-shrink: 0;
+          width: 130px;
+          height: 130px;
+          margin-right: -8px;
+          margin-bottom: -28px;
+          position: relative;
+          animation: ipFloat 4s ease-in-out infinite;
         }
-        .hero-card-deco img {
-          width: 200px;
-          height: 200px;
+        .hero-card-ip img {
+          width: 100%;
+          height: 100%;
           object-fit: contain;
+          filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.3));
+        }
+        @keyframes ipFloat {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        @media (max-width: 380px) {
+          .hero-card-ip { width: 110px; height: 110px; }
         }
 
         /* Section head */
