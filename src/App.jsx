@@ -7,10 +7,18 @@ import Admin from './screens/Admin'
 
 const ME_KEY = 'gck_me_v1'
 
+// 隱藏 admin path（會員看不到，要直接打網址才會進）
+const ADMIN_HASH = '#/wall-of-fame'
+
+function readHash() {
+  return typeof window !== 'undefined' ? window.location.hash : ''
+}
+
 export default function App() {
   const [me, setMe] = useState(null)
   const [screen, setScreen] = useState('home')
-  const [transition, setTransition] = useState(null)  // null | 'closing' | 'open'
+  const [transition, setTransition] = useState(null)
+  const [hash, setHash] = useState(readHash())
 
   useEffect(() => {
     const saved = localStorage.getItem(ME_KEY)
@@ -18,6 +26,14 @@ export default function App() {
       try { setMe(JSON.parse(saved)) } catch {}
     }
   }, [])
+
+  useEffect(() => {
+    const onHash = () => setHash(readHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
+
+  const isAdminRoute = hash === ADMIN_HASH
 
   function login(member) {
     // Phase 1: 閘門關上（PinGate 還在後面）
@@ -38,13 +54,18 @@ export default function App() {
     localStorage.removeItem(ME_KEY)
   }
 
+  // Admin route：直接打 #/wall-of-fame 就進得來（不需要登入），但首頁沒有任何入口
+  if (isAdminRoute) {
+    const adminMe = me || { id: 0, cardNum: 0, name: 'Admin', kind: 'admin' }
+    return <Admin me={adminMe} back={() => { window.location.hash = ''; setScreen('home') }} />
+  }
+
   return (
     <>
       {!me && <PinGate onLogin={login} />}
       {me && screen === 'home' && <Home me={me} go={setScreen} onLogout={logout} />}
       {me && screen === 'bingo' && <Bingo me={me} back={() => setScreen('home')} />}
       {me && screen === 'cafe' && <Cafe me={me} back={() => setScreen('home')} />}
-      {me && screen === 'admin' && <Admin me={me} back={() => setScreen('home')} />}
 
       {transition && <GateTransition phase={transition} />}
     </>

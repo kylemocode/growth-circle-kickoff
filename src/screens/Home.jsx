@@ -15,8 +15,7 @@ export default function Home({ me, go, onLogout }) {
           <div className="hero-card-eyebrow">HELLO, BUILDER</div>
           <div className="hero-card-name">{me.name}</div>
           <div className="hero-card-meta">
-            <span className="hero-meta-pill">卡 #{String(me.cardNum).padStart(2, '0')}</span>
-            <span className="hero-meta-pill mono">PIN {me.pin}</span>
+            <span className="hero-meta-pill mono">健人編號 {me.pin}</span>
           </div>
         </div>
         <div className="hero-card-ip" aria-hidden="true">
@@ -41,13 +40,12 @@ export default function Home({ me, go, onLogout }) {
       {me.kind === 'member' || !me.kind ? (
         <div className="tables-row fade-in-up-3">
           {[
-            { label: 'R1', table: me.r1, time: '19:45' },
-            { label: 'R2', table: me.r2, time: '20:00' },
-            { label: 'R3', table: me.r3, time: '20:15' },
+            { label: 'R1', table: me.r1 },
+            { label: 'R2', table: me.r2 },
+            { label: 'R3', table: me.r3 },
           ].map((r) => (
             <div key={r.label} className="table-card">
               <div className="table-card-label">{r.label}</div>
-              <div className="table-card-time">{r.time}</div>
               <div className="table-card-num">{r.table}</div>
               <div className="table-card-foot">號桌</div>
             </div>
@@ -102,16 +100,6 @@ export default function Home({ me, go, onLogout }) {
           <div className="module-arrow">→</div>
         </button>
 
-        <button className="module-card" onClick={() => go('admin')}>
-          <div className="module-icon module-icon-yellow">
-            <img src="/icon-qr.svg" alt="" />
-          </div>
-          <div className="module-body">
-            <div className="module-title">📸 合照牆（Admin）</div>
-            <div className="module-desc">當天所有 Builder 的合照</div>
-          </div>
-          <div className="module-arrow">→</div>
-        </button>
       </div>
 
       <div className="home-footer fade-in-up-5">
@@ -172,13 +160,7 @@ export default function Home({ me, go, onLogout }) {
 
         .hero-card { display: flex; align-items: flex-end; gap: 16px; }
         .hero-card-enter {
-          animation:
-            heroEnter 0.7s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) backwards,
-            cardBreath 5s 1.5s ease-in-out infinite;
-        }
-        @keyframes cardBreath {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-3px) scale(1.005); }
+          animation: heroEnter 0.7s 0.1s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
         }
         .hero-card-content { flex: 1; min-width: 0; }
         .hero-card-ip {
@@ -257,12 +239,6 @@ export default function Home({ me, go, onLogout }) {
           font-weight: 800;
           color: var(--orange-500);
           letter-spacing: 0.1em;
-        }
-        .table-card-time {
-          font-family: var(--font-mono);
-          font-size: 11px;
-          color: var(--muted);
-          margin-top: 2px;
         }
         .table-card-num {
           font-size: 52px;

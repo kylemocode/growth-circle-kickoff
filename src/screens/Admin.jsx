@@ -36,7 +36,7 @@ export default function Admin({ me, back }) {
 
       <div className="fade-in-up-1">
         <div className="h-eyebrow">PHOTO WALL</div>
-        <h1 className="h-title">📸 合照牆</h1>
+        <h1 className="h-title">合照牆</h1>
         <p className="h-sub">
           所有 Builder 在今晚 BINGO 過程中拍下的合照<br />
           <span className="text-muted" style={{ fontSize: 12 }}>

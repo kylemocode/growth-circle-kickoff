@@ -34,7 +34,6 @@ export default function Cafe({ me, back }) {
             onClick={() => setActiveRound(i)}
           >
             <div className="round-tab-label">R{q.round}</div>
-            <div className="round-tab-time">{q.time.split('–')[0]}</div>
             <div className="round-tab-table">
               <span>桌</span>
               <strong>{myTables[i]}</strong>
@@ -46,7 +45,6 @@ export default function Cafe({ me, back }) {
       <div className="round-detail fade-in-up-3" key={activeRound}>
         <div className="round-detail-head">
           <span className="pill pill-ink">R{q.round}</span>
-          <span className="round-time text-mono">{q.time}</span>
         </div>
         <h2 className="round-title">{q.title}</h2>
         <p className="round-desc">{q.description}</p>
@@ -104,12 +102,6 @@ export default function Cafe({ me, back }) {
           margin-bottom: 2px;
         }
         .round-tab.active .round-tab-label { color: white; }
-        .round-tab-time {
-          font-family: var(--font-mono);
-          font-size: 10px;
-          color: var(--muted);
-        }
-        .round-tab.active .round-tab-time { color: rgba(255,255,255,0.8); }
         .round-tab-table {
           font-size: 11px;
           font-weight: 700;
@@ -142,11 +134,6 @@ export default function Cafe({ me, back }) {
           align-items: center;
           gap: 10px;
           margin-bottom: 14px;
-        }
-        .round-time {
-          font-size: 13px;
-          color: var(--muted);
-          font-weight: 700;
         }
         .round-title {
           font-size: 22px;
