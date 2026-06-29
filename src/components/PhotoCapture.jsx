@@ -21,19 +21,29 @@ import { useEffect, useRef, useState } from 'react'
 const FRAME_SIZE = 600
 const JPEG_QUALITY = 0.7
 
-export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
+export default function PhotoCapture({
+  open,
+  taskText,
+  onClose,
+  onCapture,
+  answerLabel,        // optional: 顯示答案輸入框的 placeholder
+  requireAnswer,      // optional: true = 沒填答案不能確認
+  confirmLabel = '確認 ✓',
+}) {
   const videoRef = useRef(null)
   const streamRef = useRef(null)
   const [error, setError] = useState(null)
   const [preview, setPreview] = useState(null)  // dataUrl
-  const [withName, setWithName] = useState('')
+  const [withName, setWithName] = useState('')  // 對方名字（沿用，當沒提供 answer 時就是「跟誰拍的」）
+  const [answer, setAnswer] = useState('')      // 題目答案（answerLabel 模式才用到）
   const [facing, setFacing] = useState('user')  // 'user' | 'environment'
 
-  // 每次重新打開時，清掉舊狀態（preview / withName / error）
+  // 每次重新打開時，清掉舊狀態
   useEffect(() => {
     if (open) {
       setPreview(null)
       setWithName('')
+      setAnswer('')
       setError(null)
     }
   }, [open])
@@ -120,10 +130,12 @@ export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
       e.stopPropagation()
     }
     if (!preview) return
-    // 不要在這裡 setPreview(null) / setWithName('') —
-    // 那會讓 component 在被卸載前先「視覺切回相機預覽」造成閃爍。
-    // 直接通知 parent，parent 會 setOpen(false) 讓本元件卸載，cleanup 留給 useEffect
-    onCapture({ dataUrl: preview, withName: withName.trim() })
+    if (requireAnswer && !answer.trim()) return
+    onCapture({
+      dataUrl: preview,
+      withName: withName.trim(),
+      answer: answer.trim(),
+    })
   }
 
   function close() {
@@ -186,19 +198,35 @@ export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
 
         {preview && (
           <>
-            <input
-              type="text"
-              value={withName}
-              onChange={(e) => setWithName(e.target.value)}
-              placeholder="跟誰拍的？（選填）"
-              className="cap-name-input"
-            />
+            {answerLabel ? (
+              <textarea
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value)}
+                placeholder={answerLabel}
+                rows={3}
+                className="cap-answer-input"
+                autoFocus
+              />
+            ) : (
+              <input
+                type="text"
+                value={withName}
+                onChange={(e) => setWithName(e.target.value)}
+                placeholder="跟誰拍的？（選填）"
+                className="cap-name-input"
+              />
+            )}
             <div className="cap-actions">
               <button onClick={retake} className="btn btn-secondary" style={{ flex: 1 }}>
                 重拍
               </button>
-              <button onClick={confirm} className="btn btn-primary" style={{ flex: 2 }}>
-                確認 ✓
+              <button
+                onClick={confirm}
+                className="btn btn-primary"
+                style={{ flex: 2 }}
+                disabled={requireAnswer && !answer.trim()}
+              >
+                {confirmLabel}
               </button>
             </div>
           </>
@@ -325,6 +353,20 @@ export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
           border-radius: 50%;
           background: var(--orange-500);
         }
+
+        .cap-answer-input {
+          width: 100%;
+          padding: 12px 14px;
+          border: 2px solid var(--ink-200);
+          border-radius: var(--r-md);
+          font-size: 15px;
+          margin-top: 12px;
+          resize: vertical;
+          min-height: 80px;
+          font-family: inherit;
+          line-height: 1.5;
+        }
+        .cap-answer-input:focus { outline: none; border-color: var(--orange-500); }
 
         .cap-name-input {
           width: 100%;

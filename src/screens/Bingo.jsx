@@ -26,9 +26,6 @@ export default function Bingo({ me, back }) {
     return { order: shuffleByPin(me.pin), cells: Array(9).fill(null) }
   })
   const [activeCell, setActiveCell] = useState(null)
-  const [photoOpen, setPhotoOpen] = useState(false)
-  const [pendingPhoto, setPendingPhoto] = useState(null)  // { dataUrl, withName }
-  const [input, setInput] = useState('')
   const [celebrate, setCelebrate] = useState(false)
 
   useEffect(() => {
@@ -49,39 +46,25 @@ export default function Bingo({ me, back }) {
   function openCell(i) {
     if (state.cells[i]) return
     setActiveCell(i)
-    setInput('')
-    setPendingPhoto(null)
-    // 先開拍照
-    setPhotoOpen(true)
   }
 
-  function onPhotoCaptured({ dataUrl, withName }) {
-    setPhotoOpen(false)
-    if (withName) setInput(withName)
-    // 微小延遲確保 PhotoCapture 完全卸載再掛 confirm modal
-    setTimeout(() => setPendingPhoto({ dataUrl, withName }), 60)
+  function onPhotoCaptured({ dataUrl, answer }) {
+    if (activeCell === null || !answer?.trim()) return
+    // 一次完成：存合照 + 答案
+    savePhoto({
+      me,
+      with: null,
+      taskIdx: state.order[activeCell],
+      dataUrl,
+    })
+    const next = { ...state, cells: [...state.cells] }
+    next.cells[activeCell] = answer.trim()
+    setState(next)
+    setActiveCell(null)
   }
 
   function onPhotoCancel() {
-    setPhotoOpen(false)
     setActiveCell(null)
-  }
-
-  function saveCell() {
-    if (!input.trim() || !pendingPhoto) return
-    // 存合照
-    savePhoto({
-      me,
-      with: pendingPhoto.withName ? { cardNum: null, name: pendingPhoto.withName } : null,
-      taskIdx: state.order[activeCell],
-      dataUrl: pendingPhoto.dataUrl,
-    })
-    // 存格子答案
-    const next = { ...state, cells: [...state.cells] }
-    next.cells[activeCell] = input.trim()
-    setState(next)
-    setActiveCell(null)
-    setPendingPhoto(null)
   }
 
   function clearCell(i) {
@@ -151,45 +134,12 @@ export default function Bingo({ me, back }) {
         })}
       </div>
 
-      {activeCell !== null && !photoOpen && pendingPhoto && (
-        <div className="modal-overlay" onClick={() => { setActiveCell(null); setPendingPhoto(null) }}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-eyebrow">第 {activeCell + 1} 格 · 完成 Check-in</div>
-            <div className="modal-task">{BINGO_TASKS[state.order[activeCell]].text}</div>
-
-            <div className="cell-photo-preview">
-              <img src={pendingPhoto.dataUrl} alt="" />
-              <button onClick={() => setPhotoOpen(true)} className="cell-photo-retake">重拍</button>
-            </div>
-
-            <textarea
-              className="input"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="對方的答案 + Discord 暱稱"
-              rows={3}
-              autoFocus
-            />
-            <div className="modal-actions">
-              <button onClick={() => { setActiveCell(null); setPendingPhoto(null) }} className="btn btn-secondary" style={{ flex: 1 }}>
-                取消
-              </button>
-              <button
-                onClick={saveCell}
-                className="btn btn-primary"
-                style={{ flex: 2 }}
-                disabled={!input.trim()}
-              >
-                完成 ✓
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <PhotoCapture
-        open={photoOpen}
+        open={activeCell !== null}
         taskText={activeCell !== null ? BINGO_TASKS[state.order[activeCell]].text : ''}
+        answerLabel="對方的答案 + 對方名字"
+        requireAnswer
+        confirmLabel="完成 ✓"
         onClose={onPhotoCancel}
         onCapture={onPhotoCaptured}
       />
@@ -340,35 +290,6 @@ export default function Bingo({ me, back }) {
         @media (max-width: 380px) {
           .bingo-cell { padding: 8px 6px; }
           .bingo-cell-task { font-size: 10px; }
-        }
-
-        .cell-photo-preview {
-          position: relative;
-          width: 100%;
-          aspect-ratio: 1;
-          border-radius: var(--r-md);
-          border: 2px solid var(--ink-900);
-          overflow: hidden;
-          margin-bottom: 14px;
-          background: var(--ink-100);
-        }
-        .cell-photo-preview img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-        }
-        .cell-photo-retake {
-          position: absolute;
-          right: 10px; bottom: 10px;
-          background: rgba(17, 20, 24, 0.85);
-          color: white;
-          padding: 6px 12px;
-          border-radius: 999px;
-          font-size: 12px;
-          font-weight: 800;
-          border: 1.5px solid white;
-          backdrop-filter: blur(8px);
         }
 
         .modal-eyebrow {

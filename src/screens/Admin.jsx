@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { subscribeAllPhotos, clearAllPhotos } from '../data/photos'
+import { subscribeAllPhotos } from '../data/photos'
 
 export default function Admin({ me, back }) {
   const [photos, setPhotos] = useState([])
@@ -15,12 +15,6 @@ export default function Admin({ me, back }) {
     })
     return () => unsub && unsub()
   }, [])
-
-  function handleClear() {
-    if (!confirm('確定清除「本機」合照？雲端資料不會被清除（要到 Firebase Console）')) return
-    clearAllPhotos()
-    // 雲端訂閱還在，會立刻把資料推回來；只有完全沒雲端時才會真的清空
-  }
 
   const shown = filter === 'mine'
     ? photos.filter(p => p.ownerCardNum === me.cardNum)
@@ -94,12 +88,6 @@ export default function Admin({ me, back }) {
             </button>
           ))}
         </div>
-      )}
-
-      {photos.length > 0 && (
-        <button onClick={handleClear} className="admin-clear">
-          清除所有合照（DEV）
-        </button>
       )}
 
       {/* Lightbox */}
@@ -213,15 +201,6 @@ export default function Admin({ me, back }) {
         .admin-empty-title { font-size: 16px; font-weight: 800; }
         .admin-empty-desc { font-size: 13px; color: var(--muted); margin-top: 4px; }
 
-        .admin-clear {
-          margin-top: 24px;
-          padding: 10px;
-          color: var(--red);
-          font-size: 12px;
-          font-weight: 700;
-          opacity: 0.7;
-        }
-        .admin-clear:hover { opacity: 1; }
 
         .lightbox {
           position: fixed;
