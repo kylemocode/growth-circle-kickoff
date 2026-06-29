@@ -5,11 +5,13 @@ import Bingo from './screens/Bingo'
 import Cafe from './screens/Cafe'
 import MyPhotos from './screens/MyPhotos'
 import Admin from './screens/Admin'
+import Timer from './screens/Timer'
 
 const ME_KEY = 'gck_me_v1'
 
-// 隱藏 admin path（會員看不到，要直接打網址才會進）
+// 隱藏路徑（會員看不到，要直接打網址才會進）
 const ADMIN_HASH = '#/wall-of-fame'
+const TIMER_HASH = '#/timer'
 
 function readHash() {
   return typeof window !== 'undefined' ? window.location.hash : ''
@@ -35,6 +37,7 @@ export default function App() {
   }, [])
 
   const isAdminRoute = hash === ADMIN_HASH
+  const isTimerRoute = hash === TIMER_HASH
 
   function login(member) {
     // Phase 1: 閘門關上（PinGate 還在後面）
@@ -59,6 +62,28 @@ export default function App() {
   if (isAdminRoute) {
     const adminMe = me || { id: 0, cardNum: 0, name: 'Admin', kind: 'admin' }
     return <Admin me={adminMe} back={() => { window.location.hash = ''; setScreen('home') }} />
+  }
+
+  // Timer route：只有工作人員 (PIN 9xxx) 才能進
+  if (isTimerRoute) {
+    if (!me) return <PinGate onLogin={login} />
+    if (me.kind !== 'staff') {
+      return (
+        <div className="screen fade-in-up" style={{ textAlign: 'center', justifyContent: 'center' }}>
+          <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
+          <h1 className="h-title">這個頁面是工作人員專屬</h1>
+          <p className="h-sub">你目前的 PIN 不是工作人員身份。</p>
+          <button
+            className="btn btn-primary btn-block"
+            style={{ maxWidth: 240, margin: '0 auto' }}
+            onClick={() => { window.location.hash = ''; setScreen('home') }}
+          >
+            回首頁
+          </button>
+        </div>
+      )
+    }
+    return <Timer me={me} back={() => { window.location.hash = ''; setScreen('home') }} />
   }
 
   return (
