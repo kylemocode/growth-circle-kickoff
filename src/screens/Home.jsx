@@ -31,23 +31,46 @@ export default function Home({ me, go, onLogout }) {
           <img src="/icon-cafe.svg" alt="" className="section-icon" />
           今晚你的桌號路線
         </h2>
-        <p className="h-sub">世界咖啡館 3 輪 · 桌長留下 · 會員按桌號移動</p>
+        <p className="h-sub">
+          {me.kind === 'staff' && '工作人員身份 · 可自由走動'}
+          {me.kind === 'spare' && '備用 PIN · 桌號將由現場分配'}
+          {me.kind === 'waitlist' && '候補名單 · 請現場找工作人員確認桌號'}
+          {(!me.kind || me.kind === 'member') && '世界咖啡館 3 輪 · 桌長留下 · 會員按桌號移動'}
+        </p>
       </div>
 
-      <div className="tables-row fade-in-up-3">
-        {[
-          { label: 'R1', table: me.r1, time: '19:45' },
-          { label: 'R2', table: me.r2, time: '20:00' },
-          { label: 'R3', table: me.r3, time: '20:15' },
-        ].map((r) => (
-          <div key={r.label} className="table-card">
-            <div className="table-card-label">{r.label}</div>
-            <div className="table-card-time">{r.time}</div>
-            <div className="table-card-num">{r.table}</div>
-            <div className="table-card-foot">號桌</div>
+      {me.kind === 'member' || !me.kind ? (
+        <div className="tables-row fade-in-up-3">
+          {[
+            { label: 'R1', table: me.r1, time: '19:45' },
+            { label: 'R2', table: me.r2, time: '20:00' },
+            { label: 'R3', table: me.r3, time: '20:15' },
+          ].map((r) => (
+            <div key={r.label} className="table-card">
+              <div className="table-card-label">{r.label}</div>
+              <div className="table-card-time">{r.time}</div>
+              <div className="table-card-num">{r.table}</div>
+              <div className="table-card-foot">號桌</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex-role-card fade-in-up-3">
+          <div className="flex-role-emoji">
+            {me.kind === 'staff' ? '🧑‍🤝‍🧑' : me.kind === 'spare' ? '🎟️' : '⏳'}
           </div>
-        ))}
-      </div>
+          <div className="flex-role-body">
+            <div className="flex-role-title">
+              {me.kind === 'staff' ? `${me.role || '工作人員'}` : me.kind === 'spare' ? '備用 PIN' : '候補名單'}
+            </div>
+            <div className="flex-role-desc">
+              {me.kind === 'staff' && '你可以走動到任何一桌，協助引導或加入討論'}
+              {me.kind === 'spare' && '當天現場有空桌再分配'}
+              {me.kind === 'waitlist' && '若有人請假將會通知遞補'}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modules */}
       <div className="section-head fade-in-up-4" style={{ marginTop: 'var(--s-6)' }}>
@@ -190,6 +213,26 @@ export default function Home({ me, go, onLogout }) {
           width: 32px;
           height: 32px;
           flex-shrink: 0;
+        }
+
+        /* Flex role card (staff / spare / waitlist) */
+        .flex-role-card {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          padding: 16px 18px;
+          background: var(--paper);
+          border: 2.5px solid var(--ink-900);
+          border-radius: var(--r-md);
+          box-shadow: 4px 4px 0 0 var(--ink-900);
+        }
+        .flex-role-emoji { font-size: 32px; flex-shrink: 0; }
+        .flex-role-title { font-size: 16px; font-weight: 900; }
+        .flex-role-desc {
+          font-size: 13px;
+          color: var(--muted);
+          margin-top: 2px;
+          line-height: 1.4;
         }
 
         /* Tables row */
