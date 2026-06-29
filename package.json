@@ -9,10 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "firebase": "^12.15.0",
+    "html5-qrcode": "^2.3.8",
     "qrcode.react": "^4.2.0",
-    "html5-qrcode": "^2.3.8"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",

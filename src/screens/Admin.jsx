@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react'
-import { listAllPhotos, clearAllPhotos } from '../data/photos'
+import { subscribeAllPhotos, clearAllPhotos } from '../data/photos'
+import { fbReady } from '../firebase'
 
 export default function Admin({ me, back }) {
   const [photos, setPhotos] = useState([])
   const [active, setActive] = useState(null)
   const [filter, setFilter] = useState('all')  // all | mine
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    refresh()
+    setLoading(true)
+    const unsub = subscribeAllPhotos((list) => {
+      setPhotos(list)
+      setLoading(false)
+    })
+    return () => unsub && unsub()
   }, [])
 
-  function refresh() {
-    setPhotos(listAllPhotos().sort((a, b) => b.ts - a.ts))
-  }
-
   function handleClear() {
-    if (!confirm('確定清除「所有」合照？此操作無法復原')) return
+    if (!confirm('確定清除「本機」合照？雲端資料不會被清除（要到 Firebase Console）')) return
     clearAllPhotos()
-    refresh()
+    // 雲端訂閱還在，會立刻把資料推回來；只有完全沒雲端時才會真的清空
   }
 
   const shown = filter === 'mine'
@@ -40,7 +43,7 @@ export default function Admin({ me, back }) {
         <p className="h-sub">
           所有 Builder 在今晚 BINGO 過程中拍下的合照<br />
           <span className="text-muted" style={{ fontSize: 12 }}>
-            ⚠️ 目前為本機 demo：只顯示這台手機上的紀錄。串雲端後將顯示全場資料
+            {fbReady ? '☁️ 即時同步 Firebase' : '⚠️ 本機 demo（未連雲端）'}
           </span>
         </p>
       </div>
@@ -68,7 +71,12 @@ export default function Admin({ me, back }) {
         </div>
       </div>
 
-      {shown.length === 0 ? (
+      {loading ? (
+        <div className="admin-empty">
+          <div style={{ fontSize: 32, marginBottom: 8 }}>⏳</div>
+          <div className="admin-empty-title">載入中...</div>
+        </div>
+      ) : shown.length === 0 ? (
         <div className="admin-empty">
           <img src="/icon-self.svg" alt="" className="admin-empty-icon" />
           <div className="admin-empty-title">還沒有人拍合照</div>
