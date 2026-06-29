@@ -16,8 +16,10 @@ import { useEffect, useRef, useState } from 'react'
 //
 // 限制：純前端、用 canvas 壓縮成 720x720 JPEG，避免 localStorage 爆掉
 
-const FRAME_SIZE = 720
-const JPEG_QUALITY = 0.82
+// 注意：圖檔要塞進 Firestore document，所以單張 < 700KB 比較安全
+// 600x600 + JPEG 0.7 大概 80-150KB
+const FRAME_SIZE = 600
+const JPEG_QUALITY = 0.7
 
 export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
   const videoRef = useRef(null)

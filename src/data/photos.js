@@ -13,8 +13,7 @@ import {
   onSnapshot,
   Timestamp,
 } from 'firebase/firestore'
-import { ref, uploadString, getDownloadURL } from 'firebase/storage'
-import { db, storage, fbReady } from '../firebase'
+import { db, fbReady } from '../firebase'
 
 const COL = 'photos'
 
@@ -55,31 +54,23 @@ export async function savePhoto({ me, with: other, taskIdx, dataUrl }) {
   lsPush(LK_MINE(me.id), { ...meta, dataUrl })
   lsPush(LK_ALL, { ...meta, dataUrl })
 
-  // 2) 嘗試上雲（失敗會跳 alert 給你看真實錯誤訊息）
+  // 2) 嘗試寫雲端 — 直接把 dataUrl 塞進 Firestore document
+  //    避開 Cloud Storage（需要 Blaze 付費方案）
+  //    限制：單筆 doc 上限 1 MB，所以圖檔已壓到 600x600 / quality 0.7 約 80-150KB
   if (!fbReady) {
     console.error('[savePhoto] Firebase not configured')
     return meta
   }
   try {
-    // 上傳圖檔
-    const path = `photos/${id}.jpg`
-    const storageRef = ref(storage, path)
-    console.log('[savePhoto] uploading to', path)
-    await uploadString(storageRef, dataUrl, 'data_url', { contentType: 'image/jpeg' })
-    const url = await getDownloadURL(storageRef)
-    console.log('[savePhoto] storage uploaded, url =', url.slice(0, 80) + '...')
-
-    // 寫 Firestore（只存 URL，不存 dataUrl）
     await setDoc(doc(db, COL, id), {
       ...meta,
-      url,
+      dataUrl,
       createdAt: Timestamp.fromMillis(ts),
     })
     console.log('[savePhoto] firestore doc written:', id)
   } catch (e) {
-    console.error('[savePhoto] cloud upload failed:', e)
-    // 暫時顯示 alert 方便 debug；找到問題後可拿掉
-    alert(`雲端上傳失敗：${e.code || ''}\n${e.message || e}`)
+    console.error('[savePhoto] cloud write failed:', e)
+    alert(`雲端寫入失敗：${e.code || ''}\n${e.message || e}`)
   }
 
   return meta
