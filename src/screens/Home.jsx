@@ -100,6 +100,17 @@ export default function Home({ me, go, onLogout }) {
           <div className="module-arrow">→</div>
         </button>
 
+        <button className="module-card" onClick={() => go('myphotos')}>
+          <div className="module-icon module-icon-yellow">
+            <img src="/icon-self.svg" alt="" />
+          </div>
+          <div className="module-body">
+            <div className="module-title">我的合照</div>
+            <div className="module-desc">回顧今晚跟誰合照 · 可下載</div>
+          </div>
+          <div className="module-arrow">→</div>
+        </button>
+
       </div>
 
       <div className="home-footer fade-in-up-5">

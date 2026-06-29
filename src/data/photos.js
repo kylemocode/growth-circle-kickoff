@@ -9,6 +9,7 @@ import {
   getDocs,
   orderBy,
   query,
+  where,
   onSnapshot,
   Timestamp,
 } from 'firebase/firestore'
@@ -77,11 +78,40 @@ export async function savePhoto({ me, with: other, taskIdx, dataUrl }) {
 }
 
 /**
- * 取回「我的合照」— 同步函式（讀 localStorage）
- * Admin 頁不會用到（用 listAllPhotosLive）
+ * 取回「我的合照」— 同步函式（讀 localStorage，立即回傳）
  */
 export function listMyPhotos(myId) {
   return lsList(LK_MINE(myId))
+}
+
+/**
+ * 即時訂閱「我的合照」— 個人頁用
+ * 回傳 unsubscribe()
+ */
+export function subscribeMyPhotos(myCardNum, onChange) {
+  if (!fbReady) {
+    onChange(lsList(LK_MINE(myCardNum)))
+    return () => {}
+  }
+  const q = query(
+    collection(db, COL),
+    where('ownerCardNum', '==', myCardNum),
+    orderBy('ts', 'desc')
+  )
+  return onSnapshot(
+    q,
+    (snap) => {
+      const list = snap.docs.map((d) => {
+        const data = d.data()
+        return { ...data, dataUrl: data.url || data.dataUrl }
+      })
+      onChange(list)
+    },
+    (e) => {
+      console.warn('[subscribeMyPhotos] error', e)
+      onChange(lsList(LK_MINE(myCardNum)))
+    }
+  )
 }
 
 /**
