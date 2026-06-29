@@ -55,14 +55,19 @@ export async function savePhoto({ me, with: other, taskIdx, dataUrl }) {
   lsPush(LK_MINE(me.id), { ...meta, dataUrl })
   lsPush(LK_ALL, { ...meta, dataUrl })
 
-  // 2) 嘗試上雲（失敗不影響使用者）
-  if (!fbReady) return meta
+  // 2) 嘗試上雲（失敗會跳 alert 給你看真實錯誤訊息）
+  if (!fbReady) {
+    console.error('[savePhoto] Firebase not configured')
+    return meta
+  }
   try {
     // 上傳圖檔
     const path = `photos/${id}.jpg`
     const storageRef = ref(storage, path)
+    console.log('[savePhoto] uploading to', path)
     await uploadString(storageRef, dataUrl, 'data_url', { contentType: 'image/jpeg' })
     const url = await getDownloadURL(storageRef)
+    console.log('[savePhoto] storage uploaded, url =', url.slice(0, 80) + '...')
 
     // 寫 Firestore（只存 URL，不存 dataUrl）
     await setDoc(doc(db, COL, id), {
@@ -70,8 +75,11 @@ export async function savePhoto({ me, with: other, taskIdx, dataUrl }) {
       url,
       createdAt: Timestamp.fromMillis(ts),
     })
+    console.log('[savePhoto] firestore doc written:', id)
   } catch (e) {
-    console.warn('[savePhoto] cloud upload failed, kept in localStorage', e)
+    console.error('[savePhoto] cloud upload failed:', e)
+    // 暫時顯示 alert 方便 debug；找到問題後可拿掉
+    alert(`雲端上傳失敗：${e.code || ''}\n${e.message || e}`)
   }
 
   return meta

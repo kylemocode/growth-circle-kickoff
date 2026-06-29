@@ -103,11 +103,17 @@ export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
     startCamera(facing)
   }
 
-  function confirm() {
+  function confirm(e) {
+    // 防止 mobile click ghosting: 在 confirm 按下後阻擋同一個觸控事件繼續傳遞
+    if (e) {
+      e.preventDefault()
+      e.stopPropagation()
+    }
     if (!preview) return
-    onCapture({ dataUrl: preview, withName: withName.trim() })
+    const captured = { dataUrl: preview, withName: withName.trim() }
     setPreview(null)
     setWithName('')
+    onCapture(captured)
   }
 
   function close() {

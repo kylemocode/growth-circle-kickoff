@@ -56,10 +56,13 @@ export default function Bingo({ me, back }) {
   }
 
   function onPhotoCaptured({ dataUrl, withName }) {
-    setPendingPhoto({ dataUrl, withName })
+    // 先關拍照彈窗、但延遲一個 frame 才開 confirm modal
+    // 避免手機觸控事件「穿透」到下面 modal 的按鈕造成誤觸
     setPhotoOpen(false)
-    // 順手帶入名字到輸入欄
     if (withName) setInput(withName)
+    requestAnimationFrame(() => {
+      setTimeout(() => setPendingPhoto({ dataUrl, withName }), 250)
+    })
   }
 
   function onPhotoCancel() {
