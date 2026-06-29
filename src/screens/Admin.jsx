@@ -4,7 +4,6 @@ import { subscribeAllPhotos } from '../data/photos'
 export default function Admin({ me, back }) {
   const [photos, setPhotos] = useState([])
   const [active, setActive] = useState(null)
-  const [filter, setFilter] = useState('all')  // all | mine
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -16,17 +15,15 @@ export default function Admin({ me, back }) {
     return () => unsub && unsub()
   }, [])
 
-  const shown = filter === 'mine'
-    ? photos.filter(p => p.ownerCardNum === me.cardNum)
-    : photos
+  const shown = photos
 
   return (
-    <div className="screen fade-in-up">
+    <div className="screen screen-wide fade-in-up">
       <header className="topbar">
         <button onClick={back} className="btn-ghost back-btn">← 回首頁</button>
         <div className="topbar-logo" style={{ fontSize: 13 }}>
           <img src="/kettlebell.svg" alt="" style={{ width: 22, height: 22 }} />
-          <span>ADMIN</span>
+          <span>神秘頁面</span>
         </div>
       </header>
 
@@ -41,21 +38,9 @@ export default function Admin({ me, back }) {
           <span className="admin-stat">
             <b>{shown.length}</b> 張照片
           </span>
-          {filter === 'all' && (
-            <span className="admin-stat">
-              <b>{new Set(photos.map(p => p.ownerCardNum)).size}</b> 位參與者
-            </span>
-          )}
-        </div>
-        <div className="admin-filter">
-          <button
-            className={filter === 'all' ? 'active' : ''}
-            onClick={() => setFilter('all')}
-          >全場</button>
-          <button
-            className={filter === 'mine' ? 'active' : ''}
-            onClick={() => setFilter('mine')}
-          >我的</button>
+          <span className="admin-stat">
+            <b>{new Set(photos.map(p => p.ownerCardNum)).size}</b> 位參與者
+          </span>
         </div>
       </div>
 
@@ -114,6 +99,22 @@ export default function Admin({ me, back }) {
       <style>{`
         .back-btn { font-size: 14px; font-weight: 700; color: var(--ink-700); }
 
+        /* Wide layout：合照牆要投影，桌機版突破預設 720px 寬 */
+        .screen-wide {
+          max-width: 1600px !important;
+        }
+        @media (min-width: 1100px) {
+          .screen-wide .admin-grid {
+            grid-template-columns: repeat(6, 1fr) !important;
+            gap: 10px;
+          }
+        }
+        @media (min-width: 1400px) {
+          .screen-wide .admin-grid {
+            grid-template-columns: repeat(8, 1fr) !important;
+          }
+        }
+
         .admin-toolbar {
           display: flex;
           align-items: center;
@@ -128,24 +129,6 @@ export default function Admin({ me, back }) {
         .admin-stats { display: flex; gap: 14px; }
         .admin-stat { font-size: 13px; color: var(--muted); }
         .admin-stat b { color: var(--ink-900); font-weight: 900; font-size: 18px; margin-right: 2px; }
-        .admin-filter {
-          display: flex;
-          background: var(--ink-100);
-          padding: 3px;
-          border-radius: 999px;
-        }
-        .admin-filter button {
-          padding: 5px 12px;
-          font-size: 12px;
-          font-weight: 800;
-          color: var(--muted);
-          border-radius: 999px;
-        }
-        .admin-filter button.active {
-          background: var(--ink-900);
-          color: white;
-        }
-
         .admin-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
