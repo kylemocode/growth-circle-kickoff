@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { subscribeAllPhotos, clearAllPhotos } from '../data/photos'
-import { fbReady } from '../firebase'
 
 export default function Admin({ me, back }) {
   const [photos, setPhotos] = useState([])
@@ -40,12 +39,7 @@ export default function Admin({ me, back }) {
       <div className="fade-in-up-1">
         <div className="h-eyebrow">PHOTO WALL</div>
         <h1 className="h-title">合照牆</h1>
-        <p className="h-sub">
-          所有 Builder 在今晚 BINGO 過程中拍下的合照<br />
-          <span className="text-muted" style={{ fontSize: 12 }}>
-            {fbReady ? '☁️ 即時同步 Firebase' : '⚠️ 本機 demo（未連雲端）'}
-          </span>
-        </p>
+        <p className="h-sub">所有 Builder 在今晚 BINGO 過程中拍下的合照</p>
       </div>
 
       <div className="admin-toolbar fade-in-up-2">
