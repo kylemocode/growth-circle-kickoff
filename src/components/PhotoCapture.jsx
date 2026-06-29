@@ -29,6 +29,15 @@ export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
   const [withName, setWithName] = useState('')
   const [facing, setFacing] = useState('user')  // 'user' | 'environment'
 
+  // 每次重新打開時，清掉舊狀態（preview / withName / error）
+  useEffect(() => {
+    if (open) {
+      setPreview(null)
+      setWithName('')
+      setError(null)
+    }
+  }, [open])
+
   useEffect(() => {
     if (!open) {
       stopCamera()
@@ -106,22 +115,19 @@ export default function PhotoCapture({ open, taskText, onClose, onCapture }) {
   }
 
   function confirm(e) {
-    // 防止 mobile click ghosting: 在 confirm 按下後阻擋同一個觸控事件繼續傳遞
     if (e) {
       e.preventDefault()
       e.stopPropagation()
     }
     if (!preview) return
-    const captured = { dataUrl: preview, withName: withName.trim() }
-    setPreview(null)
-    setWithName('')
-    onCapture(captured)
+    // 不要在這裡 setPreview(null) / setWithName('') —
+    // 那會讓 component 在被卸載前先「視覺切回相機預覽」造成閃爍。
+    // 直接通知 parent，parent 會 setOpen(false) 讓本元件卸載，cleanup 留給 useEffect
+    onCapture({ dataUrl: preview, withName: withName.trim() })
   }
 
   function close() {
-    stopCamera()
-    setPreview(null)
-    setWithName('')
+    // 同理：不在這裡重設內部 state
     onClose()
   }
 
