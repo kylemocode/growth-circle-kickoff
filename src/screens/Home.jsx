@@ -34,7 +34,6 @@ export default function Home({ me, go, onLogout }) {
         <p className="h-sub">
           {me.kind === 'staff' && '工作人員身份 · 可自由走動'}
           {me.kind === 'spare' && '備用 PIN · 桌號將由現場分配'}
-          {me.kind === 'waitlist' && '候補名單 · 請現場找工作人員確認桌號'}
           {(!me.kind || me.kind === 'member') && '世界咖啡館 3 輪 · 桌長留下 · 會員按桌號移動'}
         </p>
       </div>
@@ -57,16 +56,14 @@ export default function Home({ me, go, onLogout }) {
       ) : (
         <div className="flex-role-card fade-in-up-3">
           <div className="flex-role-emoji">
-            {me.kind === 'staff' ? '🧑‍🤝‍🧑' : me.kind === 'spare' ? '🎟️' : '⏳'}
+            {me.kind === 'staff' ? '🧑‍🤝‍🧑' : '🎟️'}
           </div>
           <div className="flex-role-body">
             <div className="flex-role-title">
-              {me.kind === 'staff' ? `${me.role || '工作人員'}` : me.kind === 'spare' ? '備用 PIN' : '候補名單'}
+              {me.kind === 'staff' ? `${me.role || '工作人員'}` : '備用 PIN'}
             </div>
             <div className="flex-role-desc">
-              {me.kind === 'staff' && '你可以走動到任何一桌，協助引導或加入討論'}
-              {me.kind === 'spare' && '當天現場有空桌再分配'}
-              {me.kind === 'waitlist' && '若有人請假將會通知遞補'}
+              {me.kind === 'staff' ? '你可以走動到任何一桌，協助引導或加入討論' : '當天現場有空桌再分配'}
             </div>
           </div>
         </div>
