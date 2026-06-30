@@ -27,7 +27,7 @@ export const BINGO_TASKS = [
   },
   {
     id: 5,
-    text: '你最近一次「對自己刮目相看」的時刻',
+    text: '找和你星座一樣的人',
     placeholder: '對方的答案 + 簽名',
   },
   {
@@ -37,7 +37,7 @@ export const BINGO_TASKS = [
   },
   {
     id: 7,
-    text: '最近有什麼卡關的事嗎？',
+    text: '找和你來自同樣城市的人',
     placeholder: '對方的答案 + 簽名',
   },
   {

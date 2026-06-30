@@ -99,6 +99,7 @@ export default function Admin({ me, back }) {
       <style>{`
         .back-btn { font-size: 14px; font-weight: 700; color: var(--ink-700); }
 
+
         /* Wide layout：合照牆要投影，桌機版突破預設 720px 寬 */
         .screen-wide {
           max-width: 1600px !important;
