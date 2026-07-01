@@ -68,7 +68,7 @@ export default function MyPhotos({ me, back }) {
             <button key={p.id} className="my-cell" onClick={() => setActive(p)} style={{ animationDelay: `${i * 0.04}s` }}>
               <img src={p.dataUrl} alt="" />
               {p.withName && (
-                <div className="my-cell-with">+ {p.withName}</div>
+                <div className="my-cell-with">× {p.withName}</div>
               )}
             </button>
           ))}
@@ -83,7 +83,7 @@ export default function MyPhotos({ me, back }) {
             <img src={active.dataUrl} alt="" className="lightbox-img" />
             <div className="lightbox-meta">
               {active.withName && (
-                <div className="lightbox-with">與 {active.withName}</div>
+                <div className="lightbox-with">× {active.withName}</div>
               )}
               <div className="lightbox-ts">
                 {new Date(active.ts).toLocaleString('zh-TW')}

@@ -48,17 +48,18 @@ export default function Bingo({ me, back }) {
     setActiveCell(i)
   }
 
-  function onPhotoCaptured({ dataUrl, answer }) {
-    if (activeCell === null || !answer?.trim()) return
-    // 一次完成：存合照 + 答案
+  function onPhotoCaptured({ dataUrl, withName }) {
+    if (activeCell === null || !withName?.trim()) return
+    const name = withName.trim()
+    // 一次完成：存合照（帶對方名字）+ 該格記錄對方名字
     savePhoto({
       me,
-      with: null,
+      withName: name,
       taskIdx: state.order[activeCell],
       dataUrl,
     })
     const next = { ...state, cells: [...state.cells] }
-    next.cells[activeCell] = answer.trim()
+    next.cells[activeCell] = name
     setState(next)
     setActiveCell(null)
   }
@@ -137,8 +138,8 @@ export default function Bingo({ me, back }) {
       <PhotoCapture
         open={activeCell !== null}
         taskText={activeCell !== null ? BINGO_TASKS[state.order[activeCell]].text : ''}
-        answerLabel="對方的答案 + 對方名字"
-        requireAnswer
+        withNamePlaceholder="對方名字"
+        requireWithName
         confirmLabel="完成 ✓"
         onClose={onPhotoCancel}
         onCapture={onPhotoCaptured}

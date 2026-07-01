@@ -37,7 +37,7 @@ function lsPush(key, item) {
  * 上傳合照到雲端 + 本機緩存。
  * 上傳失敗也會存在 localStorage，至少自己看得到。
  */
-export async function savePhoto({ me, with: other, taskIdx, dataUrl }) {
+export async function savePhoto({ me, with: other, withName, taskIdx, dataUrl }) {
   const id = `${me.id}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
   const ts = Date.now()
   const meta = {
@@ -46,7 +46,7 @@ export async function savePhoto({ me, with: other, taskIdx, dataUrl }) {
     ownerCardNum: me.cardNum,
     ownerName: me.name,
     withCardNum: other?.cardNum ?? null,
-    withName: other?.name ?? '',
+    withName: (withName ?? other?.name ?? '').trim(),
     taskIdx,
   }
 

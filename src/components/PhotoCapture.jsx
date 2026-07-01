@@ -28,6 +28,8 @@ export default function PhotoCapture({
   onCapture,
   answerLabel,        // optional: 顯示答案輸入框的 placeholder
   requireAnswer,      // optional: true = 沒填答案不能確認
+  withNamePlaceholder = '跟誰拍的？（選填）',
+  requireWithName,    // optional: true = 沒填對方名字不能確認
   confirmLabel = '確認 ✓',
 }) {
   const videoRef = useRef(null)
@@ -131,6 +133,7 @@ export default function PhotoCapture({
     }
     if (!preview) return
     if (requireAnswer && !answer.trim()) return
+    if (requireWithName && !withName.trim()) return
     onCapture({
       dataUrl: preview,
       withName: withName.trim(),
@@ -212,8 +215,9 @@ export default function PhotoCapture({
                 type="text"
                 value={withName}
                 onChange={(e) => setWithName(e.target.value)}
-                placeholder="跟誰拍的？（選填）"
+                placeholder={withNamePlaceholder}
                 className="cap-name-input"
+                autoFocus={requireWithName}
               />
             )}
             <div className="cap-actions">
@@ -224,7 +228,10 @@ export default function PhotoCapture({
                 onClick={confirm}
                 className="btn btn-primary"
                 style={{ flex: 2 }}
-                disabled={requireAnswer && !answer.trim()}
+                disabled={
+                  (requireAnswer && !answer.trim()) ||
+                  (requireWithName && !withName.trim())
+                }
               >
                 {confirmLabel}
               </button>

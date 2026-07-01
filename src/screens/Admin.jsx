@@ -61,13 +61,16 @@ export default function Admin({ me, back }) {
         <div className="admin-grid">
           {shown.map((p) => (
             <button key={p.id} className="admin-cell" onClick={() => setActive(p)}>
-              <img src={p.dataUrl} alt="" />
-              <div className="admin-cell-overlay">
-                <div className="admin-cell-name">
-                  #{String(p.ownerCardNum).padStart(2, '0')} {p.ownerName}
-                </div>
+              <div className="admin-cell-img-wrap">
+                <img src={p.dataUrl} alt="" />
+              </div>
+              <div className="admin-cell-label">
+                <span className="admin-cell-owner">{p.ownerName}</span>
                 {p.withName && (
-                  <div className="admin-cell-with">+ {p.withName}</div>
+                  <>
+                    <span className="admin-cell-x">×</span>
+                    <span className="admin-cell-with-name">{p.withName}</span>
+                  </>
                 )}
               </div>
             </button>
@@ -83,11 +86,14 @@ export default function Admin({ me, back }) {
             <img src={active.dataUrl} alt="" className="lightbox-img" />
             <div className="lightbox-meta">
               <div className="lightbox-name">
-                #{String(active.ownerCardNum).padStart(2, '0')} {active.ownerName}
+                {active.ownerName}
+                {active.withName && (
+                  <>
+                    <span className="lightbox-x"> × </span>
+                    {active.withName}
+                  </>
+                )}
               </div>
-              {active.withName && (
-                <div className="lightbox-with">+ {active.withName}</div>
-              )}
               <div className="lightbox-ts">
                 {new Date(active.ts).toLocaleString('zh-TW')}
               </div>
@@ -140,38 +146,54 @@ export default function Admin({ me, back }) {
         }
         .admin-cell {
           position: relative;
-          aspect-ratio: 1;
           background: var(--ink-100);
           border: 2px solid var(--ink-900);
           border-radius: var(--r-sm);
           overflow: hidden;
           padding: 0;
           transition: transform 0.15s;
+          display: flex;
+          flex-direction: column;
         }
         .admin-cell:hover { transform: scale(1.02); }
+        .admin-cell-img-wrap {
+          aspect-ratio: 1;
+          overflow: hidden;
+        }
         .admin-cell img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           display: block;
         }
-        .admin-cell-overlay {
-          position: absolute;
-          inset: auto 0 0 0;
-          background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        .admin-cell-label {
+          background: var(--ink-900);
           color: white;
-          padding: 16px 8px 6px;
+          padding: 8px 10px;
           text-align: left;
+          font-size: 13px;
+          font-weight: 900;
+          line-height: 1.25;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 5px;
+          letter-spacing: -0.01em;
         }
-        .admin-cell-name {
-          font-size: 11px;
-          font-weight: 800;
-          line-height: 1.2;
+        .admin-cell-owner { white-space: nowrap; }
+        .admin-cell-x {
+          color: var(--orange-400);
+          font-family: var(--font-mono);
+          font-weight: 900;
+          font-size: 14px;
         }
-        .admin-cell-with {
-          font-size: 10px;
-          opacity: 0.85;
-          margin-top: 2px;
+        .admin-cell-with-name {
+          white-space: nowrap;
+          color: var(--yellow);
+        }
+        @media (min-width: 1100px) {
+          .screen-wide .admin-cell-label { font-size: 15px; padding: 10px 12px; }
+          .screen-wide .admin-cell-x { font-size: 16px; }
         }
 
         .admin-empty {
@@ -222,8 +244,8 @@ export default function Admin({ me, back }) {
           color: white;
           padding: 14px 4px;
         }
-        .lightbox-name { font-size: 18px; font-weight: 900; }
-        .lightbox-with { font-size: 14px; opacity: 0.85; margin-top: 2px; }
+        .lightbox-name { font-size: 18px; font-weight: 900; line-height: 1.4; }
+        .lightbox-x { color: var(--orange-500); font-family: var(--font-mono); }
         .lightbox-ts {
           font-family: var(--font-mono);
           font-size: 11px;
